@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body onload="loadUserInfo()">
+    <div class="dashboard-container">
+        <div class="dashboard-info">
+            <h1>Bienvenue, <span id="username">...</span>!</h1>
+            <p>Email: <span id="user-email">...</span></p>
+            <button class="btn logout-btn" onclick="logout()">Se déconnecter</button>
+        </div>
+        <div class="dashboard-design"></div>
+    </div>
+
+    <script>
+        async function loadUserInfo() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost/projapi/get_users.php", {
+                    method: "GET",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById("username").textContent = data.user.username;
+                    document.getElementById("user-email").textContent = data.user.email;
+                } else {
+                    localStorage.clear();
+                    window.location.href = "index.html";
+                }
+            } catch (error) {
+                localStorage.clear();
+                window.location.href = "index.html";
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>

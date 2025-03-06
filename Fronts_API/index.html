@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Section gauche (Formulaire) -->
+        <div class="login-form">
+            <h1>Hello, <span>welcome!</span></h1>
+            <form id="loginForm">
+                <label for="email">Email address</label>
+                <input type="email" id="email" placeholder="name@mail.com" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="***********" required>
+                
+                <div class="options">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Remember me</label>
+                    <a href="#">Forgot password?</a>
+                </div>
+                
+                <button type="submit" class="btn login-btn">Login</button>
+                <button type="button" class="btn signup-btn" onclick="redirectToRegister()">Sign up</button>
+            </form>
+            <p id="error-message" class="error-message"></p>
+
+            <div class="social-icons">
+                <p>FOLLOW</p>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+        
+        <!-- Section droite (Design) -->
+        <div class="login-design"></div>
+    </div>
+
+    <script>
+        function redirectToRegister() {
+            window.location.href = "register.html";
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            try {
+                const response = await fetch("http://localhost/projapi/login.php", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem("token", data.token);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    window.location.href = "dashboard.html";
+                } else {
+                    errorMessage.textContent = data.error;
+                }
+            } catch (error) {
+                errorMessage.textContent = "Erreur de connexion au serveur.";
+            }
+        });
+    </script>
+</body>
+</html>

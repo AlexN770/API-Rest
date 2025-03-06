@@ -1,0 +1,256 @@
+/* Réinitialisation */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Conteneur principal */
+.login-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Section gauche - Formulaire */
+.login-form {
+    width: 50%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #222;
+}
+
+h1 span {
+    color: #2d2dff;
+    font-weight: bold;
+}
+
+form {
+    margin-top: 20px;
+}
+
+label {
+    font-size: 0.9rem;
+    color: #555;
+    display: block;
+    margin-top: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.options input {
+    width: auto;
+}
+
+.options a {
+    text-decoration: none;
+    color: #777;
+}
+
+.options a:hover {
+    color: #2d2dff;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.login-btn {
+    background: #ff00ff;
+    color: white;
+}
+
+.signup-btn {
+    background: white;
+    color: #2d2dff;
+    border: 2px solid #2d2dff;
+}
+
+.signup-btn:hover {
+    background: #2d2dff;
+    color: white;
+}
+
+/* Icônes sociales */
+.social-icons {
+    margin-top: 20px;
+}
+
+.social-icons p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.social-icons a {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    color: #777;
+}
+
+.social-icons a:hover {
+    color: #2d2dff;
+}
+
+/* Section droite - Design */
+.login-design {
+    width: 50%;
+    background: linear-gradient(135deg, #ff00ff, #2d2dff);
+    position: relative;
+}
+
+.login-design::before,
+.login-design::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.login-design::before {
+    width: 250px;
+    height: 250px;
+    background: #ff69b4;
+    top: 20%;
+    left: 30%;
+}
+
+.login-design::after {
+    width: 200px;
+    height: 200px;
+    background: #7b68ee;
+    bottom: 20%;
+    right: 25%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .login-form {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .login-design {
+        display: none;
+    }
+}
+
+
+/* ---- Conteneur principal du dashboard ---- */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ---- Section gauche - Infos utilisateur ---- */
+.dashboard-info {
+    width: 50%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 50px;
+}
+
+.dashboard-info h1 {
+    font-size: 2.5rem;
+    color: #222;
+}
+
+.dashboard-info h1 span {
+    color: #2d2dff;
+    font-weight: bold;
+}
+
+.dashboard-info p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 10px;
+}
+
+.logout-btn {
+    background: #ff00ff;
+    color: white;
+    margin-top: 20px;
+}
+
+/* ---- Section droite - Design ---- */
+.dashboard-design {
+    width: 50%;
+    background: linear-gradient(135deg, #ff00ff, #2d2dff);
+    position: relative;
+}
+
+.dashboard-design::before,
+.dashboard-design::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.dashboard-design::before {
+    width: 250px;
+    height: 250px;
+    background: #ff69b4;
+    top: 20%;
+    left: 30%;
+}
+
+.dashboard-design::after {
+    width: 200px;
+    height: 200px;
+    background: #7b68ee;
+    bottom: 20%;
+    right: 25%;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .dashboard-info {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .dashboard-design {
+        display: none;
+    }
+}
+
+
