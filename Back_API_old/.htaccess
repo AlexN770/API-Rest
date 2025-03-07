@@ -1,0 +1,18 @@
+# Autoriser l'accès depuis n'importe quel domaine (CORS)
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type, Authorization"
+
+# Réécriture des URLs pour une API plus propre
+RewriteEngine On
+
+# Rediriger toutes les requêtes vers les fichiers PHP correspondants
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ $1.php [L,QSA]
+
+# Désactiver l'affichage des fichiers sensibles
+<FilesMatch "\.(htaccess|htpasswd|env|ini|log|sh|sql|bak|config)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

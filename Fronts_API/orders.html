@@ -1,88 +1,221 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mes Commandes</title>
-    <!-- Chemin correct vers le fichier CSS -->
     <link rel="stylesheet" href="./styles.css">
 </head>
+
 <body onload="loadOrders()">
     <div class="orders-container">
-        
+
         <!-- En-tête -->
         <header>
             <h1>📦 Mes Commandes</h1>
-            <button onclick="logout()" class="btn logout-btn">Déconnexion</button>
         </header>
 
-        <!-- Formulaire d'ajout de commande -->
-        <form id="orderForm" class="order-form">
-            <label for="product">Produit :</label>
-            <input type="text" id="product" name="product" required placeholder="Nom du produit">
-            
-            <label for="quantity">Quantité :</label>
-            <input type="number" id="quantity" name="quantity" required placeholder="Quantité">
-            
-            <button type="submit" class="btn add-btn">Ajouter Commande</button>
-        </form>
+        <!-- Contenu principal -->
+        <main class="content">
 
-        <!-- Liste des commandes -->
-        <ul id="ordersList" class="orders-list">
-            <!-- Les éléments de la liste seront ajoutés ici via JavaScript -->
-        </ul>
+            <!-- Formulaire d'ajout de commande -->
+            <form id="orderForm" class="order-form">
+                <label for="product">Produit :</label>
+                <input type="text" id="product" name="product" required placeholder="Nom du produit">
+
+                <label for="quantity">Quantité :</label>
+                <input type="number" id="quantity" name="quantity" required placeholder="Quantité">
+
+                <button type="submit" class="btn add-btn">Ajouter Commande</button>
+            </form>
+
+            <!-- Liste des commandes -->
+            <section class="orders-section">
+                <ul id="ordersList" class="orders-list">
+                    <!-- Les commandes seront affichées ici -->
+                </ul>
+            </section>
+
+            <!-- Formulaire de modification (caché par défaut) -->
+            <form id="editForm" class="order-form" style="display: none;">
+                <h2>✏️ Modifier la commande</h2>
+                <input type="hidden" id="editOrderId">
+                
+                <label for="editProduct">Nouveau produit :</label>
+                <input type="text" id="editProduct" required placeholder="Nom du produit">
+
+                <label for="editQuantity">Nouvelle quantité :</label>
+                <input type="number" id="editQuantity" required placeholder="Quantité">
+
+                <button type="submit" class="btn save-btn">Enregistrer</button>
+                <button type="button" onclick="cancelEdit()" class="btn cancel-btn">Annuler</button>
+            </form>
+
+        </main>
+
+        <!-- Bouton de déconnexion -->
+        <div class="button-container">
+            <button onclick="logout()" class="btn logout-btn">Déconnexion</button>
+        </div>
+
     </div>
 
     <script>
-        const orders = [];
+        document.addEventListener("DOMContentLoaded", loadOrders);
 
-        // Fonction pour afficher les commandes
-        function displayOrders() {
+        // Charger les commandes depuis l'API
+        async function loadOrders() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Vous devez être connecté.");
+                window.location.href = "index.html";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost/projapi/orders.php", {
+                    method: "GET",
+                    headers: { "Authorization": "Bearer " + token }
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    displayOrders(data.orders);
+                } else {
+                    alert("Erreur : " + data.error);
+                }
+            } catch (error) {
+                console.error("Erreur de chargement des commandes:", error);
+            }
+        }
+
+        // Afficher les commandes dans la liste
+        function displayOrders(orders) {
             const ordersList = document.getElementById('ordersList');
             ordersList.innerHTML = '';
 
-            orders.forEach((order, index) => {
+            orders.forEach(order => {
                 const li = document.createElement('li');
                 li.classList.add('order-item');
                 li.innerHTML = `
                     <span>${order.product} (Quantité: ${order.quantity})</span>
-                    <button class="btn delete-btn" onclick="deleteOrder(${index})">Supprimer</button>
+                    <button class="btn edit-btn" onclick="showEditForm(${order.id}, '${order.product}', ${order.quantity})">Modifier</button>
+                    <button class="btn delete-btn" onclick="deleteOrder(${order.id})">Supprimer</button>
                 `;
                 ordersList.appendChild(li);
             });
         }
 
-        // Fonction pour ajouter une commande
-        document.getElementById('orderForm').addEventListener('submit', function (e) {
+        // Ajouter une commande
+        document.getElementById('orderForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const product = document.getElementById('product').value;
-            const quantity = document.getElementById('quantity').value;
+            const product = document.getElementById('product').value.trim();
+            const quantity = parseInt(document.getElementById('quantity').value.trim(), 10);
+            if (!product || quantity <= 0) return alert("Produit ou quantité invalide.");
 
-            orders.push({ product, quantity });
+            const token = localStorage.getItem("token");
+            try {
+                const response = await fetch("http://localhost/projapi/orders.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({ product, quantity })
+                });
 
-            displayOrders();
-
-            // Réinitialiser le formulaire
-            document.getElementById('product').value = '';
-            document.getElementById('quantity').value = '';
+                const data = await response.json();
+                if (data.success) {
+                    alert("Commande ajoutée !");
+                    loadOrders();
+                } else {
+                    alert("Erreur : " + data.error);
+                }
+            } catch (error) {
+                console.error("Erreur lors de l'ajout:", error);
+            }
         });
 
-        // Fonction pour supprimer une commande
-        function deleteOrder(index) {
-            orders.splice(index, 1);
-            displayOrders();
+        // Supprimer une commande
+        async function deleteOrder(orderId) {
+            const token = localStorage.getItem("token");
+
+            try {
+                const response = await fetch("http://localhost/projapi/orders.php", {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({ order_id: orderId })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert("Commande supprimée !");
+                    loadOrders();
+                } else {
+                    alert("Erreur : " + data.error);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la suppression:", error);
+            }
         }
 
-        // Fonction pour simuler le chargement des commandes
-        function loadOrders() {
-            displayOrders();
+        // Afficher le formulaire de modification
+        function showEditForm(id, product, quantity) {
+            document.getElementById('editOrderId').value = id;
+            document.getElementById('editProduct').value = product;
+            document.getElementById('editQuantity').value = quantity;
+            document.getElementById('editForm').style.display = 'block';
         }
 
-        // Fonction de déconnexion
+        // Annuler la modification
+        function cancelEdit() {
+            document.getElementById('editForm').reset();
+            document.getElementById('editForm').style.display = 'none';
+        }
+
+        // Mettre à jour une commande
+        document.getElementById('editForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const id = document.getElementById('editOrderId').value;
+            const product = document.getElementById('editProduct').value.trim();
+            const quantity = parseInt(document.getElementById('editQuantity').value.trim(), 10);
+
+            const token = localStorage.getItem("token");
+            try {
+                const response = await fetch("http://localhost/projapi/orders.php", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({ order_id: id, product, quantity })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert("Commande mise à jour !");
+                    cancelEdit();
+                    loadOrders();
+                } else {
+                    alert("Erreur : " + data.error);
+                }
+            } catch (error) {
+                console.error("Erreur lors de la mise à jour:", error);
+            }
+        });
+
+        // Déconnexion
         function logout() {
-            alert('Vous êtes déconnecté!');
+            localStorage.removeItem("token");
+            window.location.href = "index.html";
         }
     </script>
+
 </body>
 </html>

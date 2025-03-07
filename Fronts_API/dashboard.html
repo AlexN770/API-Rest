@@ -1,39 +1,54 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
-    
-    <!-- Chemin correct vers le fichier CSS -->
-    <link rel="stylesheet" href="./styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord</title>
+    <link rel="stylesheet" href="styles.css">
+	
 </head>
-
-<body onload="checkAuth()">
+<body onload="loadUserInfo()">
     <div class="dashboard-container">
-        
-        <!-- Section d'accueil -->
         <div class="dashboard-info">
-            <h1>Bienvenue sur le <span>Dashboard</span></h1>
-            <p id="welcomeMessage"></p>
+            <h1>Bienvenue, <span id="username">...</span>!</h1>
+            <p>Email: <span id="user-email">...</span></p>
+			<button class="btn order-btn" onclick="redirectToOrders()">Voir les commandes</button>
+			<button class="btn logout-btn" onclick="logout()">Se déconnecter</button>
 
-            <!-- Lien vers la page Orders -->
-            <a href="orders.html" id="ordersLink" class="btn orders-btn" style="display: none;">
-                📦 Gérer mes Commandes
-            </a>
+            <!-- Section de gestion du profil -->
+            <div class="user-settings">
+                <h2>Modifier votre profil</h2>
+                <form id="userSettingsForm">
+                    <label for="newUsername">Nouveau Nom</label>
+                    <input type="text" id="newUsername" placeholder="Entrez votre nouveau nom">
+        
+                    <label for="newEmail">Nouvel Email</label>
+                    <input type="email" id="newEmail" placeholder="Entrez votre nouvel email">
+        
+                    <label for="newPassword">Nouveau Mot de Passe</label>
+                    <input type="password" id="newPassword" placeholder="Entrez un nouveau mot de passe">
+        
+                    <div class="options">
+                        <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility()">
+                        <label for="showPassword">Afficher le mot de passe</label>
+                    </div>
 
-            <button onclick="logout()" class="btn logout-btn">Déconnexion</button>
+                    <button type="submit" class="btn update-btn">Mettre à jour</button>
+                </form>
+
+                <p id="updateMessage" class="error-message"></p>
+            </div>
+			
         </div>
 
-        <!-- Section design -->
         <div class="dashboard-design"></div>
 
     </div>
+	
+	
 
     <script>
-        // Vérifie l'authentification et affiche le lien Orders
-        async function checkAuth() {
+        async function loadUserInfo() {
             const token = localStorage.getItem("token");
             if (!token) {
                 window.location.href = "index.html";
@@ -41,31 +56,97 @@
             }
 
             try {
-                const response = await fetch("http://localhost/projapi/verify.php", {
+                const response = await fetch("http://localhost/projapi/get_users.php", {
+                    method: "GET",
                     headers: { "Authorization": "Bearer " + token }
                 });
 
                 const data = await response.json();
-                if (!data.success) {
-                    localStorage.removeItem("token");
-                    window.location.href = "index.html";
+                if (data.user) {
+                    document.getElementById("username").textContent = data.user.username;
+                    document.getElementById("user-email").textContent = data.user.email;
                 } else {
-                    document.getElementById("welcomeMessage").textContent = `Bonjour, ${data.user.username} !`;
-                    document.getElementById("ordersLink").style.display = "block";
+                    localStorage.clear();
+                    window.location.href = "index.html";
                 }
+
             } catch (error) {
-                console.error("Erreur de vérification :", error);
+                localStorage.clear();
                 window.location.href = "index.html";
             }
         }
-
-        // Déconnexion
+		
+		function redirectToOrders() {
+        window.location.href = "orders.html";
+		}
+		
         function logout() {
-            localStorage.removeItem("token");
+            localStorage.clear();
             window.location.href = "index.html";
         }
+
+        async function updateUser(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            const newUsername = document.getElementById("newUsername").value.trim();
+            const newEmail = document.getElementById("newEmail").value.trim();
+            const newPassword = document.getElementById("newPassword").value.trim();
+
+            if (!newUsername && !newEmail && !newPassword) {
+                document.getElementById("updateMessage").textContent = "Veuillez remplir au moins un champ.";
+                document.getElementById("updateMessage").style.color = "red";
+                return;
+            }
+
+            const updateData = {};
+            if (newUsername) updateData.username = newUsername;
+            if (newEmail) updateData.email = newEmail;
+            if (newPassword) updateData.password = newPassword;
+
+            try {
+                const response = await fetch("http://localhost/projapi/update_user.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify(updateData)
+                });
+
+                const result = await response.json();
+                const messageElement = document.getElementById("updateMessage");
+
+                if (response.ok && result.success) {
+                    messageElement.textContent = "Mise à jour réussie !";
+                    messageElement.style.color = "green";
+
+                    if (newUsername) document.getElementById("username").textContent = newUsername;
+                    if (newEmail) document.getElementById("user-email").textContent = newEmail;
+
+                    document.getElementById("userSettingsForm").reset(); // Réinitialiser le formulaire
+                } else {
+                    messageElement.textContent = result.error || "Échec de la mise à jour.";
+                    messageElement.style.color = "red";
+                }
+            } catch (error) {
+                console.error("Erreur:", error);
+                document.getElementById("updateMessage").textContent = "Une erreur s'est produite.";
+                document.getElementById("updateMessage").style.color = "red";
+            }
+        }
+
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById("newPassword");
+            passwordField.type = document.getElementById("showPassword").checked ? "text" : "password";
+        }
+
+        document.getElementById("userSettingsForm").addEventListener("submit", updateUser);
     </script>
-
 </body>
-
 </html>

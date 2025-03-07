@@ -7,19 +7,18 @@
 }
 
 /* Conteneur principal */
-.login-container, .dashboard-container, .orders-container {
+.login-container {
     display: flex;
     height: 100vh;
 }
 
-/* Section gauche - Formulaire et Infos */
-.login-form, .dashboard-info, .orders-info {
+/* Section gauche - Formulaire */
+.login-form {
     width: 50%;
     background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: center;
     padding: 50px;
 }
 
@@ -33,13 +32,6 @@ h1 span {
     font-weight: bold;
 }
 
-p {
-    font-size: 1.2rem;
-    color: #555;
-    margin-top: 10px;
-}
-
-/* Formulaire */
 form {
     margin-top: 20px;
 }
@@ -60,7 +52,6 @@ input {
     font-size: 1rem;
 }
 
-/* Options (mot de passe oublié, etc.) */
 .options {
     display: flex;
     justify-content: space-between;
@@ -82,7 +73,6 @@ input {
     color: #2d2dff;
 }
 
-/* Boutons */
 .btn {
     width: 100%;
     padding: 12px;
@@ -93,7 +83,7 @@ input {
     cursor: pointer;
 }
 
-.login-btn, .logout-btn {
+.login-btn {
     background: #ff00ff;
     color: white;
 }
@@ -107,20 +97,6 @@ input {
 .signup-btn:hover {
     background: #2d2dff;
     color: white;
-}
-
-/* Lien vers Orders */
-.orders-link {
-    margin-top: 20px;
-    padding: 12px;
-    background: #2d2dff;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-.orders-link:hover {
-    background: #1a1aff;
 }
 
 /* Icônes sociales */
@@ -144,21 +120,21 @@ input {
 }
 
 /* Section droite - Design */
-.login-design, .dashboard-design, .orders-design {
+.login-design {
     width: 50%;
     background: linear-gradient(135deg, #ff00ff, #2d2dff);
     position: relative;
 }
 
-.login-design::before, .dashboard-design::before, .orders-design::before,
-.login-design::after, .dashboard-design::after, .orders-design::after {
+.login-design::before,
+.login-design::after {
     content: "";
     position: absolute;
     border-radius: 50%;
     opacity: 0.7;
 }
 
-.login-design::before, .dashboard-design::before, .orders-design::before {
+.login-design::before {
     width: 250px;
     height: 250px;
     background: #ff69b4;
@@ -166,7 +142,7 @@ input {
     left: 30%;
 }
 
-.login-design::after, .dashboard-design::after, .orders-design::after {
+.login-design::after {
     width: 200px;
     height: 200px;
     background: #7b68ee;
@@ -174,28 +150,36 @@ input {
     right: 25%;
 }
 
-/* Réinitialisation */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
+/* Responsive */
+@media (max-width: 768px) {
+    .login-container {
+        flex-direction: column;
+    }
+
+    .login-form {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .login-design {
+        display: none;
+    }
 }
 
-/* Conteneur principal du Dashboard */
+
+/* ---- Conteneur principal du dashboard ---- */
 .dashboard-container {
     display: flex;
     height: 100vh;
 }
 
-/* Infos utilisateur */
+/* ---- Section gauche - Infos utilisateur ---- */
 .dashboard-info {
     width: 50%;
     background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     text-align: center;
     padding: 50px;
 }
@@ -216,37 +200,13 @@ input {
     margin-top: 10px;
 }
 
-/* Boutons */
-.btn {
-    padding: 12px 20px;
-    margin: 15px 0;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    text-decoration: none;
-    text-align: center;
-}
-
-/* Bouton Déconnexion */
 .logout-btn {
     background: #ff00ff;
     color: white;
+    margin-top: 20px;
 }
 
-/* Bouton Orders */
-.orders-btn {
-    background: white;
-    color: #2d2dff;
-    border: 2px solid #2d2dff;
-}
-
-.orders-btn:hover {
-    background: #2d2dff;
-    color: white;
-}
-
-/* Section droite - Design */
+/* ---- Section droite - Design ---- */
 .dashboard-design {
     width: 50%;
     background: linear-gradient(135deg, #ff00ff, #2d2dff);
@@ -277,7 +237,7 @@ input {
     right: 25%;
 }
 
-/* Responsive */
+/* ---- Responsive ---- */
 @media (max-width: 768px) {
     .dashboard-container {
         flex-direction: column;
@@ -293,7 +253,65 @@ input {
     }
 }
 
-/* Réinitialisation */
+/* ---- Section Gestion du Profil ---- */
+.user-settings {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    width: 350px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.user-settings h2 {
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.user-settings label {
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.user-settings input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.user-settings input::placeholder {
+    color: #ccc;
+}
+
+.update-btn {
+    background: #3498db;
+    color: white;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 15px;
+}
+
+.update-btn:hover {
+    background: #2980b9;
+}
+
+#updateMessage {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #27ae60;
+    font-weight: bold;
+}/* Réinitialisation */
 * {
     margin: 0;
     padding: 0;
@@ -302,138 +320,351 @@ input {
 }
 
 /* Conteneur principal */
-.orders-container {
-    max-width: 800px;
-    margin: 50px auto; /* Centrage du conteneur */
-    padding: 20px;
+.login-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Section gauche - Formulaire */
+.login-form {
+    width: 50%;
     background: #fff;
-    border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centrer les éléments dans le conteneur */
-    text-align: center; /* Centrer le texte dans le conteneur */
+    justify-content: center;
+    padding: 50px;
 }
 
-/* En-tête */
-header {
-    display: flex;
-    justify-content: center; /* Centrer horizontalement */
-    align-items: center; /* Centrer verticalement */
-    width: 100%; /* S'assurer que l'en-tête prend toute la largeur */
-    margin-bottom: 70px;
+h1 {
+    font-size: 2.5rem;
+    color: #222;
 }
 
-header h1 {
-    font-size: 2rem;
+h1 span {
     color: #2d2dff;
-}
-
-/* Formulaire */
-.order-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 30px;
-    align-items: center; /* Centrer les éléments du formulaire */
-    width: 100%;
-    max-width: 500px; /* Limiter la largeur pour éviter une trop grande largeur sur grand écran */
-}
-
-.order-form label {
     font-weight: bold;
-    color: #444;
 }
 
-.order-form input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1rem;
-    width: 100%; /* Champs de saisie prennent toute la largeur disponible */
-    max-width: 400px; /* Limiter la largeur des champs de saisie */
+form {
+    margin-top: 20px;
 }
 
-/* Liste des commandes */
-.orders-list {
-    margin-top: 30px;
-    list-style-type: none;
-    padding: 0;
-    text-align: left; /* Alignement à gauche pour la liste */
+label {
+    font-size: 0.9rem;
+    color: #555;
+    display: block;
+    margin-top: 10px;
+}
+
+input {
     width: 100%;
-    max-width: 500px; /* Limiter la largeur de la liste */
-    margin-left: auto;
-    margin-right: auto;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
-.order-item {
+.options {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #f9f9f9;
+    margin-top: 10px;
+    font-size: 0.9rem;
 }
 
-/* Boutons */
+.options input {
+    width: auto;
+}
+
+.options a {
+    text-decoration: none;
+    color: #777;
+}
+
+.options a:hover {
+    color: #2d2dff;
+}
+
 .btn {
-    padding: 10px 15px;
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    border-radius: 5px;
     font-size: 1rem;
-    transition: background 0.3s ease;
+    cursor: pointer;
 }
 
-/* Bouton Ajouter */
-.add-btn {
-    background: #2d2dff;
-    color: white;
-}
-
-.add-btn:hover {
-    background: #1c1cc9;
-}
-
-/* Bouton Supprimer */
-.delete-btn {
-    background: #ff4d4f;
-    color: white;
-}
-
-.delete-btn:hover {
-    background: #d9363e;
-}
-
-/* Bouton Déconnexion */
-.logout-btn {
+.login-btn {
     background: #ff00ff;
     color: white;
 }
 
+.signup-btn {
+    background: white;
+    color: #2d2dff;
+    border: 2px solid #2d2dff;
+}
+
+.signup-btn:hover {
+    background: #2d2dff;
+    color: white;
+}
+
+/* Icônes sociales */
+.social-icons {
+    margin-top: 20px;
+}
+
+.social-icons p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.social-icons a {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    color: #777;
+}
+
+.social-icons a:hover {
+    color: #2d2dff;
+}
+
+/* Section droite - Design */
+.login-design {
+    width: 50%;
+    background: linear-gradient(135deg, #ff00ff, #2d2dff);
+    position: relative;
+}
+
+.login-design::before,
+.login-design::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.login-design::before {
+    width: 250px;
+    height: 250px;
+    background: #ff69b4;
+    top: 20%;
+    left: 30%;
+}
+
+.login-design::after {
+    width: 200px;
+    height: 200px;
+    background: #7b68ee;
+    bottom: 20%;
+    right: 25%;
+}
+
 /* Responsive */
-@media (max-width: 600px) {
-    .orders-container {
-        padding: 15px;
-    }
-
-    header h1 {
-        font-size: 1.5rem;
-    }
-
-    .btn {
-        font-size: 0.9rem;
-    }
-
-    /* Réduction de l'espace entre les éléments */
-    .order-form {
-        gap: 10px;
-    }
-
-    .order-item {
+@media (max-width: 768px) {
+    .login-container {
         flex-direction: column;
-        align-items: flex-start;
     }
+
+    .login-form {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .login-design {
+        display: none;
+    }
+}
+
+
+/* ---- Conteneur principal du dashboard ---- */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ---- Section gauche - Infos utilisateur ---- */
+.dashboard-info {
+    width: 50%;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 50px;
+}
+
+.dashboard-info h1 {
+    font-size: 2.5rem;
+    color: #222;
+}
+
+.dashboard-info h1 span {
+    color: #2d2dff;
+    font-weight: bold;
+}
+
+.dashboard-info p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-top: 10px;
+}
+
+.logout-btn {
+    background: #ff00ff;
+    color: white;
+    margin-top: 20px;
+}
+
+/* ---- Section droite - Design ---- */
+.dashboard-design {
+    width: 50%;
+    background: linear-gradient(135deg, #ff00ff, #2d2dff);
+    position: relative;
+}
+
+.dashboard-design::before,
+.dashboard-design::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+}
+
+.dashboard-design::before {
+    width: 250px;
+    height: 250px;
+    background: #ff69b4;
+    top: 20%;
+    left: 30%;
+}
+
+.dashboard-design::after {
+    width: 200px;
+    height: 200px;
+    background: #7b68ee;
+    bottom: 20%;
+    right: 25%;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    .dashboard-info {
+        width: 100%;
+        padding: 30px;
+    }
+
+    .dashboard-design {
+        display: none;
+    }
+}
+
+/* ---- Section Gestion du Profil ---- */
+.user-settings {
+    background: #ffffff; /* Fond blanc */
+    padding: 30px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Titre */
+.user-settings h2 {
+    font-size: 1.8rem;
+    color: #222; /* Texte noir */
+    margin-bottom: 15px;
+}
+
+/* Labels */
+.user-settings label {
+    font-size: 0.9rem;
+    color: #333; /* Texte foncé */
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Inputs */
+.user-settings input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    background: #f5f5f5; /* Fond gris clair */
+    color: #000; /* Texte noir */
+    transition: border-color 0.3s, background 0.3s;
+}
+
+/* Effet focus */
+.user-settings input:focus {
+    border-color: #2d2dff;
+    background: #fff;
+    outline: none;
+}
+
+/* Placeholder */
+.user-settings input::placeholder {
+    color: #777;
+}
+
+/* Options (case à cocher "Afficher mot de passe") */
+.options {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 10px;
+    font-size: 0.9rem;
+}
+
+.options input {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* Bouton Modifier */
+.update-btn {
+    background: #ff00ff;
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 15px;
+    transition: background 0.3s;
+}
+
+/* Effet hover */
+.update-btn:hover {
+    background: #d400d4;
+}
+
+/* Message d'erreur et de succès */
+#error-message, #updateMessage {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Message d'erreur (rouge) */
+.error-message {
+    color: red;
+}
+
+/* Message de succès (vert) */
+.success-message {
+    color: green;
 }

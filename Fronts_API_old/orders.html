@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Commandes</title>
+    <!-- Chemin correct vers le fichier CSS -->
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body onload="loadOrders()">
+    <div class="orders-container">
+        
+        <!-- En-tête -->
+        <header>
+            <h1>📦 Mes Commandes</h1>
+            <button onclick="logout()" class="btn logout-btn">Déconnexion</button>
+        </header>
+
+        <!-- Formulaire d'ajout de commande -->
+        <form id="orderForm" class="order-form">
+            <label for="product">Produit :</label>
+            <input type="text" id="product" name="product" required placeholder="Nom du produit">
+            
+            <label for="quantity">Quantité :</label>
+            <input type="number" id="quantity" name="quantity" required placeholder="Quantité">
+            
+            <button type="submit" class="btn add-btn">Ajouter Commande</button>
+        </form>
+
+        <!-- Liste des commandes -->
+        <ul id="ordersList" class="orders-list">
+            <!-- Les éléments de la liste seront ajoutés ici via JavaScript -->
+        </ul>
+    </div>
+
+    <script>
+        const orders = [];
+
+        // Fonction pour afficher les commandes
+        function displayOrders() {
+            const ordersList = document.getElementById('ordersList');
+            ordersList.innerHTML = '';
+
+            orders.forEach((order, index) => {
+                const li = document.createElement('li');
+                li.classList.add('order-item');
+                li.innerHTML = `
+                    <span>${order.product} (Quantité: ${order.quantity})</span>
+                    <button class="btn delete-btn" onclick="deleteOrder(${index})">Supprimer</button>
+                `;
+                ordersList.appendChild(li);
+            });
+        }
+
+        // Fonction pour ajouter une commande
+        document.getElementById('orderForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const product = document.getElementById('product').value;
+            const quantity = document.getElementById('quantity').value;
+
+            orders.push({ product, quantity });
+
+            displayOrders();
+
+            // Réinitialiser le formulaire
+            document.getElementById('product').value = '';
+            document.getElementById('quantity').value = '';
+        });
+
+        // Fonction pour supprimer une commande
+        function deleteOrder(index) {
+            orders.splice(index, 1);
+            displayOrders();
+        }
+
+        // Fonction pour simuler le chargement des commandes
+        function loadOrders() {
+            displayOrders();
+        }
+
+        // Fonction de déconnexion
+        function logout() {
+            alert('Vous êtes déconnecté!');
+        }
+    </script>
+</body>
+</html>

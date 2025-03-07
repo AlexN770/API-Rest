@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    
+    <!-- Chemin correct vers le fichier CSS -->
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body onload="checkAuth()">
+    <div class="dashboard-container">
+        
+        <!-- Section d'accueil -->
+        <div class="dashboard-info">
+            <h1>Bienvenue sur le <span>Dashboard</span></h1>
+            <p id="welcomeMessage"></p>
+
+            <!-- Lien vers la page Orders -->
+            <a href="orders.html" id="ordersLink" class="btn orders-btn" style="display: none;">
+                📦 Gérer mes Commandes
+            </a>
+
+            <button onclick="logout()" class="btn logout-btn">Déconnexion</button>
+        </div>
+
+        <!-- Section design -->
+        <div class="dashboard-design"></div>
+
+    </div>
+
+    <script>
+        // Vérifie l'authentification et affiche le lien Orders
+        async function checkAuth() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                window.location.href = "index.html";
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost/projapi/verify.php", {
+                    headers: { "Authorization": "Bearer " + token }
+                });
+
+                const data = await response.json();
+                if (!data.success) {
+                    localStorage.removeItem("token");
+                    window.location.href = "index.html";
+                } else {
+                    document.getElementById("welcomeMessage").textContent = `Bonjour, ${data.user.username} !`;
+                    document.getElementById("ordersLink").style.display = "block";
+                }
+            } catch (error) {
+                console.error("Erreur de vérification :", error);
+                window.location.href = "index.html";
+            }
+        }
+
+        // Déconnexion
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "index.html";
+        }
+    </script>
+
+</body>
+
+</html>
